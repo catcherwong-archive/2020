@@ -1,13 +1,18 @@
-﻿namespace Config.Api
+﻿namespace Microsoft.Extensions.Configuration
 {
-    using Microsoft.Extensions.Configuration;
+    using Config.Api;
+    using System;
 
     public static class ApiExtensions
     {
         public static IConfigurationBuilder AddApiConfiguration(
-            this IConfigurationBuilder builder, string appName, string env, string url, int period = 10, bool optional = false)
+            this IConfigurationBuilder builder, Action<ApiConfigurationSource> action)
         {
-            return builder.Add(new ApiConfigurationSource(appName, env, url, period, optional)) ;
+            var source = new ApiConfigurationSource();
+
+            action(source);
+
+            return builder.Add(source);
         }
     }
 }

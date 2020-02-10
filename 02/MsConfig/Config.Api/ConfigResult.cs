@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public class ConfigResult
+    internal class ConfigResult
     {
         public int Code { get; set; }
 

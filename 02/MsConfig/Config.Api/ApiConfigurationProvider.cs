@@ -5,36 +5,26 @@
     using System.Net.Http;
     using System.Threading;
 
-    public class ApiConfigurationProvider : ConfigurationProvider, IDisposable
+    internal class ApiConfigurationProvider : ConfigurationProvider, IDisposable
     {
-        private Timer _timer;
+        private readonly Timer _timer;
 
-        public string ReqUrl { get; private set; }
+        private readonly ApiConfigurationSource _apiConfigurationSource;
 
-        public int Period { get; private set; }
-
-        public bool Optional { get; private set; }
-
-        public string AppName { get; private set; }
-
-        public string Env { get; private set; }
-
-        public ApiConfigurationProvider(string appName, string env, string url, int second, bool optional = false)
+        public ApiConfigurationProvider(ApiConfigurationSource apiConfigurationSource)
         {
-            AppName = appName;
-            Env = env;
-            ReqUrl = url;
-            Period = second;
-            Optional = optional;
+            _apiConfigurationSource = apiConfigurationSource;
 
-            _timer = new Timer(x => Load(), null, TimeSpan.Zero, TimeSpan.FromSeconds(Period));
+            _timer = new Timer(x => Load(), 
+                null, 
+                TimeSpan.FromSeconds(_apiConfigurationSource.Period), 
+                TimeSpan.FromSeconds(_apiConfigurationSource.Period));
         }
-
 
         public void Dispose()
         {
-            _timer.Dispose();
-
+            _timer?.Change(Timeout.Infinite, 0);
+            _timer?.Dispose();
             Console.WriteLine("Dispose timer");
         }
 
@@ -42,7 +32,7 @@
         {
             try
             {
-                var url = $"{ReqUrl}?appName={AppName}&env={Env}";
+                var url = $"{_apiConfigurationSource.ReqUrl}?appName={_apiConfigurationSource.AppName}&env={_apiConfigurationSource.Env}";
 
                 using (HttpClient client = new HttpClient())
                 {
@@ -53,23 +43,24 @@
                     if (config.Code == 0)
                     {
                         Data = config.Data;
+                        OnReload();
                         Console.WriteLine($"update at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}");
                         Console.WriteLine($"{res}");
                     }
                     else
                     {
-                        if (!Optional)
+                        if (!_apiConfigurationSource.Optional)
                         {
-                            throw new Exception($"can not load config from {ReqUrl}");
+                            throw new Exception($"can not load config from {_apiConfigurationSource.ReqUrl}");
                         }
                     }
                 }
             }
             catch
             {
-                if (!Optional)
+                if (!_apiConfigurationSource.Optional)
                 {
-                    throw new Exception($"can not load config from {ReqUrl}");
+                    throw new Exception($"can not load config from {_apiConfigurationSource.ReqUrl}");
                 }
             }
         }
