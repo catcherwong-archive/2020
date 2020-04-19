@@ -2,6 +2,10 @@
 {
     public class AppSettings
     {
+        public string appName { get; set; }
+
+        public string env { get; set; }
+
         public string key1 { get; set; }
 
         public string key2 { get; set; }

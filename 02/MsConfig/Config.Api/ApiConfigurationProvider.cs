@@ -37,7 +37,9 @@
                 using (HttpClient client = new HttpClient())
                 {
                     var resp = client.GetAsync(url).ConfigureAwait(false).GetAwaiter().GetResult();
+
                     var res = resp.Content.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+
                     var config = Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigResult>(res);
 
                     if (config.Code == 0)
@@ -49,19 +51,21 @@
                     }
                     else
                     {
-                        if (!_apiConfigurationSource.Optional)
-                        {
-                            throw new Exception($"can not load config from {_apiConfigurationSource.ReqUrl}");
-                        }
+                        CheckOptional();
                     }
                 }
             }
             catch
             {
-                if (!_apiConfigurationSource.Optional)
-                {
-                    throw new Exception($"can not load config from {_apiConfigurationSource.ReqUrl}");
-                }
+                CheckOptional();
+            }
+        }
+
+        private void CheckOptional()
+        {
+            if (!_apiConfigurationSource.Optional)
+            {
+                throw new Exception($"can not load config from {_apiConfigurationSource.ReqUrl}");
             }
         }
     }

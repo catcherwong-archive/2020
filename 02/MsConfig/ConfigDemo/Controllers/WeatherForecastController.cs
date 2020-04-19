@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Options;
+    using System;
     using System.Collections.Generic;
 
     [ApiController]
@@ -10,14 +11,21 @@
     public class WeatherForecastController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-
         private readonly AppSettings _settings;
+        private readonly AppSettings _sSettings;
+        private readonly AppSettings _mSettings;
 
-        public WeatherForecastController(IConfiguration configuration, IOptions<AppSettings> optionsAccs)
+        public WeatherForecastController(
+            IConfiguration configuration,
+            IOptions<AppSettings> options,
+            IOptionsSnapshot<AppSettings> sOptions,
+            IOptionsMonitor<AppSettings> _mOptions
+            )
         {
             _configuration = configuration;
-
-            _settings = optionsAccs.Value;
+            _settings = options.Value;
+            _sSettings = sOptions.Value;
+            _mSettings = _mOptions.CurrentValue;
         }
 
         [HttpGet]
@@ -25,26 +33,33 @@
         {
             var list = new List<string>();
 
-            list.Add(_configuration["key1"]);
-            list.Add(_configuration["key2"]);
+            Console.WriteLine($"===============================================");
 
-            var sc1 = _configuration.GetSection("SC1");
-            list.Add(sc1["key1"]);
+            var other = _configuration["other"];
+            Console.WriteLine($"other = {other}");
 
-            var sc2 = _configuration.GetSection("SC2");
-            list.Add(sc2["key1"]);
+            var appName = _configuration["appName"];
+            var env = _configuration["env"];
+            var key1 = _configuration["key1"];
+            var SC1key1 = _configuration["SC1__key1"];
+            var SC2key1 = _configuration["SC2:key1"];
 
-            list.Add("=====");
+            Console.WriteLine($"appName={appName},env={env},key1={key1},SC1key1={SC1key1},SC2key1={SC2key1}");
 
-            list.Add(_settings.key1);
-            list.Add(_settings.key2);
+            var str1 = Newtonsoft.Json.JsonConvert.SerializeObject(_settings);
+            Console.WriteLine($"IOptions");
+            Console.WriteLine($"{str1}");
 
-            list.Add(_settings.SC1?.key1);
-            list.Add(_settings.SC2?.key1);
+            var str2 = Newtonsoft.Json.JsonConvert.SerializeObject(_sSettings);
+            Console.WriteLine($"IOptionsSnapshot");
+            Console.WriteLine($"{str2}");
 
-            list.Add("=====");
+            var str3 = Newtonsoft.Json.JsonConvert.SerializeObject(_mSettings);
+            Console.WriteLine($"IOptionsMonitor");
+            Console.WriteLine($"{str3}");
 
-            list.Add(_configuration["other"]);
+            Console.WriteLine($"===============================================");
+            Console.WriteLine("");
 
             return list;
         }
