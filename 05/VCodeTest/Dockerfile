@@ -2,6 +2,7 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
 
+# 复制字体到 /usr/share/fonts 目录
 COPY ./comic.ttf /usr/share/fonts/comic.ttf
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
