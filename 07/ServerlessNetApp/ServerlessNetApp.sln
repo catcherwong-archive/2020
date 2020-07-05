@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GwApi", "GwApi\GwApi.csproj", "{48AB3270-B2D2-4443-AE36-508D10CA3A6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NfxApi", "NfxApi\NfxApi.csproj", "{3787979D-8D14-47D9-A23A-FDA811662025}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{48AB3270-B2D2-4443-AE36-508D10CA3A6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48AB3270-B2D2-4443-AE36-508D10CA3A6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48AB3270-B2D2-4443-AE36-508D10CA3A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48AB3270-B2D2-4443-AE36-508D10CA3A6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3787979D-8D14-47D9-A23A-FDA811662025}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3787979D-8D14-47D9-A23A-FDA811662025}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3787979D-8D14-47D9-A23A-FDA811662025}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3787979D-8D14-47D9-A23A-FDA811662025}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {53F0CBE5-A8E4-4314-9CB4-08F4686B384D}
+	EndGlobalSection
+EndGlobal

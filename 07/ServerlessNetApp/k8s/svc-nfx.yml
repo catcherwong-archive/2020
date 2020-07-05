@@ -1,0 +1,60 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: api-nfx-svc
+  namespace: test
+  labels:
+    app: api-nfx-svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-nfx-svc
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: api-nfx-svc
+    spec:
+      containers:
+         - env:           
+            - name: TZ
+              value: Asia/Shanghai
+           image: >-
+            镜像仓库地址/api-nfx:v1
+           imagePullPolicy: IfNotPresent
+           name: api-nfx
+           ports:
+             - containerPort: 80
+               name: http80
+               protocol: TCP
+           resources:
+             requests:
+               cpu: 250m
+               memory: 512Mi
+           terminationMessagePath: /dev/termination-log
+           terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-nfx-svc
+  namespace: test
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: api-nfx-svc
+  clusterIP: None
+  sessionAffinity: None

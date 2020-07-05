@@ -1,0 +1,21 @@
+# 按需替换
+FROM jexus-x64-img:6.1 AS base
+# FROM beginor/jexus-x64:6.2.1.12 AS base
+
+FROM mono:6.8 AS build
+WORKDIR /src
+COPY . .
+# 还原nuget包
+RUN nuget restore ServerlessNetApp.sln -Source https://api.nuget.org/v3/index.json
+# 编译
+RUN msbuild NfxApi/NfxApi.csproj /t:ReBuild /p:Configuration=Release /p:OutDir=/src/out /p:DeleteExistingFiles=True /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem
+
+
+FROM base AS final
+WORKDIR /usr/jexus
+COPY --from=build /src/out/_PublishedWebsites/NfxApi /app
+# 把发布文件复制过来
+COPY ./nfxweb /usr/jexus/siteconf/default
+# 按需放开
+#RUN sed -i 's/TLSv1.2/TLSv1.0/g' /etc/ssl/openssl.cnf
+CMD [ "jws", "restart"]

@@ -1,0 +1,1 @@
+docker build -t ncapi:v1 -f ./Dockerfile.nc .

@@ -1,0 +1,1 @@
+docker build -t nfxapi:v1 -f ./Dockerfile.nfx .

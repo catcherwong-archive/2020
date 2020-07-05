@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    # 指定 SLB 的Id
+    service.beta.kubernetes.io/alicloud-loadbalancer-id: lb-xxxxxxx
+  name: gw-ingress
+  namespace: test
+spec:
+  rules:
+    - host: ncgw.xxx.com
+      http:
+        paths:
+          - backend:
+              serviceName: api-nc-svc
+              servicePort: 80
+            path: /
+status:
+  loadBalancer:
+    ingress:
+      - ip: xxx.xxx.xxx.xxxx
