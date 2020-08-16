@@ -1,0 +1,5 @@
+- labels:
+    service: prometheus
+    project: monitor
+  targets:
+  - localhost:9090

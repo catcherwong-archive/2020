@@ -1,0 +1,6 @@
+- labels:
+    service: nc
+    project: demo
+  targets: 
+  - localhost:9874
+  - localhost:9875
